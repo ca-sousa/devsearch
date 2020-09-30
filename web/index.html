@@ -8,8 +8,14 @@
   </head>
   <body>
     <h2>search-devs</h2>
+    <div id="preLoader" class="flex-row flex-center">
+      <div class="progress">
+        <div class="indeterminate"></div>
+      </div>
+    </div>  
+
     <div class="devsContainer" id="devsSearch">
-      <form id="searchForm">
+      <form id="searchForm" onsubmit="handleSubmit(event)">
         <input type="string" id="search" placeholder="Pesquise por nome:" />
         <div class="options">
           <div>
