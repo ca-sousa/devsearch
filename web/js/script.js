@@ -1,198 +1,145 @@
-// dados
+let radioOr;
+let radioAnd;
+let checkJava;
+let checkJS;
+let checkPython;
 let devList = [];
-// inputs
-let inputSearch = null;
-let checkBoxLang = null;
-let radioLogOperator = null;
-// filtros
-let filterLogOperator = null;
-let filterLanguages = [];
-let filterName = "";
-// elementos
-let listDevs = null;
-let form = null;
-let devsSearch = null;
-let preLoader = null;
-
-window.addEventListener("load", async () => {
-  getValues();
-  await fetchDev();
-  events();
+let devName;
+let resultsDiv;
+let markedLangs = [];
+let globalCondition;
+let countDevs;
+let displayedList = [];
+window.addEventListener('load', () => {
+  radioOr = document.querySelector('#radioOr');
+  radioAnd = document.querySelector('#radioAnd');
+  checkJava = document.querySelector('#checkJava');
+  checkJS = document.querySelector('#checkJS');
+  checkPython = document.querySelector('#checkPython');
+  resultsDiv = document.querySelector('#results');
+  devName = document.querySelector('#devName');
+  countDevs = document.querySelector('#countDevs');
+  fetchDevs();
 });
 
-function getValues() {
-  inputSearch = document.querySelector("#search");
-  checkBoxLang = document.querySelectorAll("[name='language']");
-  radioLogOperator = document.querySelectorAll("[name='logicalOperators']");
-  filterLogOperator = document.querySelector("[name='logicalOperators']:checked").id;
-  
-  devsSearch = document.querySelector("#devsSearch")
-  form = document.querySelector("#searchForm");
-  listDevs = document.querySelector("#devs");
-  preLoader = document.querySelector("#preLoader");
+async function fetchDevs() {
+  const req = await fetch('http://localhost:3001/devs');
+  const data = await req.json();
 
-  checkBoxLang.forEach((language) =>
-    language.checked ? filterLanguages.push(language.id) : null
-  );
-}
-
-
-async function fetchDev() {
-  const req = await fetch("http://localhost:3001/devs");
-  const res = await req.json();
-  
-  devList = res.map((dev) => {
-    const { id, name, picture, programmingLanguages } = dev;
-      
-    const nameTreated = name
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f-\x20]/g, "");
-
+  devList = data.map((dev) => {
+    const { name, picture, programmingLanguages } = dev;
     return {
-      id,
       name,
-      nameTreated,
       picture,
-      programmingLanguages,
+      languages: programmingLanguages.map((lang) => lang.language).sort(),
+      nameSearch: name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/([\u0300-\u036f]|[^0-9a-zA-Z])/g, ''), //retirando caract. especiais,
     };
   });
-  devList = devList.map(
-    ({ id, name, nameTreated, picture, programmingLanguages }) => {
-      const progLanguageIcon = [];
-      const languageTypes = [];
-
-      programmingLanguages.forEach((languages) => {
-        const { language, id} = languages;
-        const idLowerCase = id.toLowerCase();
-        languageTypes.push(language.toLowerCase());
-        switch (language) {
-          case "Java":
-            progLanguageIcon.push({
-              idLowerCase,
-              language,
-              icon: "./assets/java.png",
-            });
-            break;
-          case "JavaScript":
-            progLanguageIcon.push({
-              idLowerCase,
-              language,
-              icon: "./assets/javascript.png",
-            });
-            break;
-          case "Python":
-            progLanguageIcon.push({
-              idLowerCase,
-              language,
-              icon: "./assets/python.png",
-            });
-            break;
-            default:
-            break;
-        }
-      });
-      return { 
-        id, 
-        name,
-        nameTreated, 
-        picture,
-        languageTypes,
-        progLanguageIcon,
-      };
-    }
-  )
-  renderDevList(devList);
-  showPreLoader();
+  displayedList = devList;
+  console.log(displayedList);
+  render();
 }
 
-// events
-function events() {
-  inputSearch.addEventListener("input", handleKeyUp);
-  checkBoxLang.forEach((checkBoxLang) => {
-    checkBoxLang.addEventListener("input", handleSelectLanguage);
+function render() {
+  renderDevList();
+  handleActions();
+}
+
+function renderDevList() {
+  countDevs.textContent = `Devs encontrados: ${displayedList.length}`;
+  displayedList.sort((a, b) => a.name.localeCompare(b.name));
+  let devListHTML = '<div class="devList">';
+  displayedList.forEach((dev) => {
+    const { name, picture, languages } = dev;
+    const iconLabelHTML = getIconLabel(languages);
+    const devHTML = `
+    <div class ="dev">
+    <img src="${picture}" class="profile-pic">
+    <div class = "dev-details">
+    <p>${name}</p>
+    ${iconLabelHTML}
+    </div>
+    </div>
+    `;
+    devListHTML += devHTML;
   });
-  radioLogOperator.forEach((radioLogOperator) => {
-    radioLogOperator.addEventListener("input", handleLogicalOperator);
+  devListHTML += '</div>';
+  resultsDiv.innerHTML = devListHTML;
+}
+
+function getIconLabel(languages) {
+  let iconLabel = '<span class="icones">';
+  languages.forEach((language) => {
+    iconLabel += `<img src="./img/${language.toLowerCase()}.png" class="icone"/>`;
+  });
+  iconLabel += '</span>';
+  return iconLabel;
+}
+
+function handleActions() {
+  checkJava.addEventListener('click', () => {
+    filterByLanguage('Java', checkJava.checked);
+  });
+  checkJS.addEventListener('click', () => {
+    filterByLanguage('JavaScript', checkJS.checked);
+  });
+  checkPython.addEventListener('click', () => {
+    filterByLanguage('Python', checkPython.checked);
+  });
+
+  radioOr.addEventListener('click', () => {
+    globalCondition = 'or';
+    filterByCondition(globalCondition);
+  });
+  radioAnd.addEventListener('click', () => {
+    globalCondition = 'and';
+    filterByCondition(globalCondition);
+  });
+  devName.addEventListener('input', () => {
+    filterByCondition(globalCondition);
   });
 }
 
-function showPreLoader() {
-  setTimeout(() => {
-    preLoader.classList.add("hidden");
-    devsSearch.classList.remove("hidden");
-    activaInput();
-  }, 2000)
-}
-
-function handleSubmit(event) {
-  event.preventDefault();
-}
-
-function activaInput() {
-  inputSearch.focus();
-}
-
-function handleKeyUp(event) {
-  filterName = event.target.value;
-  filterDevs();
-}
-
-function handleSelectLanguage() {
-  filterLanguages = [];
-  const filter = document.querySelectorAll("[name=language]:checked");
-  filter.forEach(({id}) => {
-    filterLanguages.push(id);
-  });
-  filterDevs();
-}
-
-function handleLogicalOperator(event) {
-  filterLogOperator = event.target.id;
-  filterDevs();
-}
-
-// filtragem
-function filterDevs() {
-  let filterDevs = [];
-  const filterLowerCase = filterName.toLowerCase();
-  filterDevs = devList.filter((dev) => {
-    return dev.nameTreated.includes(filterLowerCase);
-  });
-  filterDevs = filterDevs.filter((dev) => {
-    return filterLogOperator == "or"
-      ? filterLanguages.some((item) => dev.languageTypes.includes(item))
-      : dev.languageTypes.join("") === filterLanguages.join("");
-  });
-  renderDevList(filterDevs);
-}
-
-// render
-function renderDevList(devs) {
-  listDevs.innerHTML = "";
-  const h3 = document.createElement("h3");
-
-  if (devs === null) {
-    h3.innerHTML = "Não foi encontrado nenhum dev."
-    listDevs.appendChild(h3);
+function filterByLanguage(language, checked) {
+  if (checked === true) {
+    markedLangs.push(language);
   } else {
-    h3.innerHTML = `${devs.length} devs encontrados`
-    listDevs.appendChild(h3)
-    const devHTML = ``
+    markedLangs.splice(markedLangs.indexOf(language), 1);
+  }
+  markedLangs.sort();
+  filterByCondition(globalCondition);
+}
 
-    devs.forEach((dev, index) => {
-      const { name, picture, languageTypes, progLanguageIcon } = dev;
-      
-      const HTML = `
-        <div class="dev">
-          <img src="${picture}" alt="${name}" />
-          <p>${name}</p>
-          <img src="${progLanguageIcon}" alt="${languageTypes}">
-        </div>
-      `;
-          devHTML.appendChild(HTML);
-    });
-    listDevs.appendChild(devHTML);
+function filterByCondition(condition) {
+  if (markedLangs.length > 0) {
+    if (condition === 'or') {
+      displayedList = devList.filter((dev) =>
+        dev.languages.some((lang) => markedLangs.includes(lang))
+      );
+    } else {
+      if (markedLangs.length > 0) {
+      }
+      displayedList = devList.filter(
+        (dev) => dev.languages.join() == markedLangs.join()
+      );
+    }
+  } else {
+    displayedList = devList;
   }
 
+  filterByName(devName.value);
+  console.log(displayedList);
+  console.log(markedLangs);
+  renderDevList();
+}
+
+function filterByName(name) {
+  if (name != '' && name != undefined && name != null) {
+    displayedList = devList.filter((dev) =>
+      dev.nameSearch.includes(name.trim())
+    );
+  }
 }

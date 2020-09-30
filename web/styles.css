@@ -1,0 +1,59 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  padding-left: 2%;
+}
+.search-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  width: 60%;
+}
+.filters {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.checkboxes label {
+  padding-left: 15px;
+}
+
+.radiobuttons label {
+  padding-left: 15px;
+}
+.results {
+  padding-top: 5%;
+}
+.dev {
+  display: flex;
+  flex-direction: row;
+  border: 0.5px solid grey;
+  border-radius: 10px;
+  justify-content: start;
+  align-items: center;
+  width: 20%;
+  margin: 1%;
+}
+.icone {
+  width: 25px;
+  height: 25px;
+}
+
+.devList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.profile-pic {
+  border-radius: 50%;
+  width: 25%;
+  padding-left: 4%;
+}
+.dev-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 3%;
+}
