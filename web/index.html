@@ -3,40 +3,62 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
     <link href="./css/style.css" rel="stylesheet" />
-    <title>DevMedia</title>
+    <title>search-devs</title>
   </head>
   <body>
-    <h2>search-devs</h2>
-    <div id="preLoader" class="flex-row flex-center">
-      <div class="progress">
-        <div class="indeterminate"></div>
+    <div class="row">
+      <div class="input-field col xl12 l12 m12 s12">
+        <input type="text" id="inputSearch" placeholder="Pesquise por nome" />
       </div>
-    </div>  
-
-    <div class="devsContainer" id="devsSearch">
-      <form id="searchForm" onsubmit="handleSubmit(event)">
-        <input type="string" id="search" placeholder="Pesquise por nome:" />
-        <div class="options">
-          <div>
-            <input type="checkbox" id="java" name="language" checked/>
-            <label for="java">Java</label>
-            <input type="checkbox" id="javascript" name="language" checked/>
-            <label for="javascript">JavaScript</label>
-            <input type="checkbox" id="python" name="language" checked/>
-            <label for="python">Python</label>
-          </div>
-          <div>
-            <input type="radio" id="optionAnd" name="logicalOperators" />
-            <label for="optionAnd">E</label>
-            <input type="radio" id="optionOr" name="logicalOperators" checked/>
-            <label for="optionOr">Ou</label>
-          </div>
-        </div>
-      </form>
-      <!-- <h3><span id="totalSearch"></span> devs foram encontrados</h3> -->
-      <div id="devs"></div>
     </div>
+
+    <div class="row">
+        <div class="col xl1 l1 m2 s4">
+            <label>
+              <input type="checkbox" id="java" checked/>
+              <span>Java</span>
+            </label>
+        </div>
+        <div class="col xl1 l1 m2 s4">
+          <label>
+            <input type="checkbox" id="javascript" checked/>
+            <span>JavaScript</span>
+          </label>
+        </div>
+        <div class="col xl1 l1 m2 s4">
+          <label>
+            <input type="checkbox" id="python" checked/>
+            <span>Python</span>
+          </label>
+        </div>
+
+        <div class="right col xl1 l1 m2 s4">
+          <label>
+            <input type="radio" id="optionAnd" name="logicalOperators"/>
+            <span>E</span>
+          </label>
+        </div>
+        <div class="right col xl1 l1 m2 s4">
+          <input type="radio" id="optionOr" name="logicalOperators" checked/>
+          <label>Ou</label>
+        </div>
+    </div>
+    
+    <div class="row">
+      <div class="devCount"></div>
+    </div>
+
+    <div class="row">
+      <div class="devSearch"></div>
+    </div>
+
     <script src="./js/script.js"></script>
   </body>
 </html>
