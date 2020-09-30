@@ -73,7 +73,7 @@ function renderDevList() {
 function getIconLabel(languages) {
   let iconLabel = '<span class="icones">';
   languages.forEach((language) => {
-    iconLabel += `<img src="./img/${language.toLowerCase()}.png" class="icone"/>`;
+    iconLabel += `<img src="./assets/${language.toLowerCase()}.png" class="icone"/>`;
   });
   iconLabel += '</span>';
   return iconLabel;
