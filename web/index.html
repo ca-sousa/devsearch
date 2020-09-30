@@ -3,10 +3,34 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="./css/style.css" rel="stylesheet">
         <title>DevMedia</title>
     </head>
     <body>
-        <h1> Procure pelo os devs que deseja </h1>
+        <h2> search-devs </h2>
+        <div class="devsContainer">
+            <form id="searchForm">
+                <input type="string" id="name" placeholder="Pesquise por nome:">
+                <div class="options">
+                    <div class="langProg">
+                        <input type="checkbox" id="java" name="java">
+                        <label for="java">Java</label>
+                        <input type="checkbox" id="javascript" name="javascript">
+                        <label for="javascript">JavaScript</label>
+                        <input type="checkbox" id="python" name="python">
+                        <label for="python">Python</label>
+                    </div>
+                    <div class="logicalOperator">
+                        <input type="checkbox" id="optionAnd" name="optionAnd">
+                        <label for="optionAnd">E</label>
+                        <input type="checkbox" id="optionOr" name="optionOr">
+                        <label for="optionOr">Ou</label>
+                    </div>
+                </div>
+            </form>
+            <h3><span id="totalSearch"></span> devs foram encontrados</h3>
+            <div id="devs"></div>
+        </div>
         <script src="./js/script.js"></script>
     </body>
 </html>
