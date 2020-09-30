@@ -1,0 +1,10 @@
+(X) Subir o backend
+(X) Carregar dados por fetch
+(x) Tratar input de pesquisa 
+    (X) Minúsculo 
+    (X) Sem espaços
+    (X) Sem acentos
+() Filtragem de devs 
+    () E
+    () Ou
+() Representar linguagens de Programação com imagens

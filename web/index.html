@@ -8,27 +8,27 @@
   </head>
   <body>
     <h2>search-devs</h2>
-    <div class="devsContainer">
+    <div class="devsContainer" id="devsSearch">
       <form id="searchForm">
-        <input type="string" id="name" placeholder="Pesquise por nome:" />
+        <input type="string" id="search" placeholder="Pesquise por nome:" />
         <div class="options">
-          <div class="langProg">
-            <input type="checkbox" id="java" name="java" />
+          <div>
+            <input type="checkbox" id="java" name="language" checked/>
             <label for="java">Java</label>
-            <input type="checkbox" id="javascript" name="javascript" />
+            <input type="checkbox" id="javascript" name="language" checked/>
             <label for="javascript">JavaScript</label>
-            <input type="checkbox" id="python" name="python" />
+            <input type="checkbox" id="python" name="language" checked/>
             <label for="python">Python</label>
           </div>
-          <div class="logicalOperator">
-            <input type="radio" id="optionAnd" name="optionAnd" />
+          <div>
+            <input type="radio" id="optionAnd" name="logicalOperators" />
             <label for="optionAnd">E</label>
-            <input type="radio" id="optionOr" name="optionOr" />
+            <input type="radio" id="optionOr" name="logicalOperators" checked/>
             <label for="optionOr">Ou</label>
           </div>
         </div>
       </form>
-      <h3><span id="totalSearch"></span> devs foram encontrados</h3>
+      <!-- <h3><span id="totalSearch"></span> devs foram encontrados</h3> -->
       <div id="devs"></div>
     </div>
     <script src="./js/script.js"></script>
